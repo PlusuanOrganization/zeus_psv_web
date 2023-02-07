@@ -66,11 +66,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #fff;
+    background: transparent;
   }
 
   .wrapper {
-    background: rgba(0, 0, 0, 0.24);
+    background: #fff;
     display: flex;
     flex: 0 0 auto;
   }
