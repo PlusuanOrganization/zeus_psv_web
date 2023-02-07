@@ -44,6 +44,7 @@
       "import/no-extraneous-dependencies": [
         "error",
         {
+          "endOfLine": "auto",
           "devDependencies": [
             "src/setupTests.js",
             "**/*.test.js"

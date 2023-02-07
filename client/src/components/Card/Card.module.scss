@@ -69,7 +69,7 @@
     display: block;
 
     &:after {
-      content: "";
+      content: '';
       display: table;
       clear: both;
     }
@@ -120,5 +120,9 @@
     cursor: auto;
     display: block;
     margin-bottom: 8px;
+  }
+
+  .wrapper:first-child {
+    margin-top: 8px;
   }
 }

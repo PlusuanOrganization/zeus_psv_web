@@ -8,6 +8,7 @@ import { usePopup } from '../../lib/popup';
 import Paths from '../../constants/Paths';
 import NotificationsStep from './NotificationsStep';
 import UserStep from '../UserStep';
+import zeusLogo from '../../assets/images/zeusLogo.svg';
 
 import styles from './Header.module.scss';
 
@@ -42,7 +43,7 @@ const Header = React.memo(
       <div className={styles.wrapper}>
         {!project && (
           <Link to={Paths.ROOT} className={classNames(styles.logo, styles.title)}>
-            Planka
+            <img src={zeusLogo} alt="Logo" />
           </Link>
         )}
         <Menu inverted size="large" className={styles.menu}>
@@ -90,6 +91,7 @@ const Header = React.memo(
               onLogout={onLogout}
             >
               <Menu.Item className={classNames(styles.item, styles.itemHoverable)}>
+                <Icon fitted name="user" />
                 {user.name}
               </Menu.Item>
             </UserPopup>
