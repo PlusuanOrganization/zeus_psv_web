@@ -52,15 +52,11 @@
     ],
     "rules": {
       "no-undef": "off",
-      "prettier/prettier": [
-        "error",
-        {
-          "endOfLine": "auto"
-        }
-      ]
+      "prettier/prettier": "error"
     }
   },
   "dependencies": {
+    "@eslint/eslintrc": "1.4.1",
     "concurrently": "^7.6.0",
     "husky": "^8.0.2",
     "lint-staged": "^13.0.3"

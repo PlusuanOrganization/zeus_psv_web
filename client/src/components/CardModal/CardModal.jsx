@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +17,7 @@ import Activities from './Activities';
 import User from '../User';
 import Label from '../Label';
 import DueDate from '../DueDate';
+import CalificationsPopup from '../CalificationsPopup/CalificationsPopup';
 import Timer from '../Timer';
 import BoardMembershipsStep from '../BoardMembershipsStep';
 import LabelsStep from '../LabelsStep';
@@ -80,6 +81,8 @@ const CardModal = React.memo(
     onClose,
   }) => {
     const [t] = useTranslation();
+
+    const [show, isShow] = useState(false);
 
     const isGalleryOpened = useRef(false);
 
@@ -155,6 +158,11 @@ const CardModal = React.memo(
 
       onClose();
     }, [onClose]);
+
+    const showCalificationsPopup = () => {
+      isShow(!show);
+      <CalificationsPopup />;
+    };
 
     const AttachmentAddPopup = usePopup(AttachmentAddStep);
     const BoardMembershipsPopup = usePopup(BoardMembershipsStep);
@@ -459,6 +467,10 @@ const CardModal = React.memo(
                     {t('common.attachment')}
                   </Button>
                 </AttachmentAddPopup>
+                <Button onClick={showCalificationsPopup} fluid className={styles.actionButton}>
+                  <Icon name="star" className={styles.actionIcon} />
+                  Calificaciones
+                </Button>
               </div>
               <div className={styles.actions}>
                 <span className={styles.actionsTitle}>{t('common.actions')}</span>
@@ -504,6 +516,7 @@ const CardModal = React.memo(
               </div>
             </Grid.Column>
           )}
+          {show && <CalificationsPopup />}
         </Grid.Row>
       </Grid>
     );

@@ -1,0 +1,73 @@
+:global(#app) {
+  .button {
+    background: #e9e6e6;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    max-width: 100%;
+    outline: none;
+    padding: 0;
+    margin-left: auto;
+    border-radius: 50%;
+  }
+}
+
+main {
+  width: 85%;
+  height: 90%;
+  background: #e9e6e6;
+  border-radius: 15px;
+  position: absolute;
+  left: 7%;
+  right: auto;
+  margin: auto;
+  z-index: 2000;
+
+  & header {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  & header h3 {
+    font-size: 16px;
+    margin: 0;
+
+  }
+
+  & div.container {
+    width: 100%;
+    height: 90%;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-flow: row nowrap;
+  }
+
+  & div.container .promedio {
+    width: 45%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column wrap;
+  }
+
+  & div.container .promedio_number {
+    font-size: 5rem;
+    font-weight: 800;
+  }
+
+  & div.container .resenia {
+    width: 50%;
+
+    & ul {
+      list-style: none;
+    }
+  }
+}
+
+.ui.fluid.button.customButtonX {
+  width: fit-content;
+}
