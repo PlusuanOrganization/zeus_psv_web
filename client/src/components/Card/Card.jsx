@@ -168,38 +168,43 @@ const Card = React.memo(
                       {contentNode}
                     </Link>
                     {canEdit && (
-                      <ActionsPopup
-                        card={{
-                          dueDate,
-                          timer,
-                          boardId,
-                          listId,
-                          projectId,
-                        }}
-                        projectsToLists={allProjectsToLists}
-                        boardMemberships={allBoardMemberships}
-                        currentUserIds={users.map((user) => user.id)}
-                        labels={allLabels}
-                        currentLabelIds={labels.map((label) => label.id)}
-                        onNameEdit={handleNameEdit}
-                        onUpdate={onUpdate}
-                        onMove={onMove}
-                        onTransfer={onTransfer}
-                        onDelete={onDelete}
-                        onUserAdd={onUserAdd}
-                        onUserRemove={onUserRemove}
-                        onBoardFetch={onBoardFetch}
-                        onLabelAdd={onLabelAdd}
-                        onLabelRemove={onLabelRemove}
-                        onLabelCreate={onLabelCreate}
-                        onLabelUpdate={onLabelUpdate}
-                        onLabelMove={onLabelMove}
-                        onLabelDelete={onLabelDelete}
-                      >
+                      <>
+                        <ActionsPopup
+                          card={{
+                            dueDate,
+                            timer,
+                            boardId,
+                            listId,
+                            projectId,
+                          }}
+                          projectsToLists={allProjectsToLists}
+                          boardMemberships={allBoardMemberships}
+                          currentUserIds={users.map((user) => user.id)}
+                          labels={allLabels}
+                          currentLabelIds={labels.map((label) => label.id)}
+                          onNameEdit={handleNameEdit}
+                          onUpdate={onUpdate}
+                          onMove={onMove}
+                          onTransfer={onTransfer}
+                          onDelete={onDelete}
+                          onUserAdd={onUserAdd}
+                          onUserRemove={onUserRemove}
+                          onBoardFetch={onBoardFetch}
+                          onLabelAdd={onLabelAdd}
+                          onLabelRemove={onLabelRemove}
+                          onLabelCreate={onLabelCreate}
+                          onLabelUpdate={onLabelUpdate}
+                          onLabelMove={onLabelMove}
+                          onLabelDelete={onLabelDelete}
+                        >
+                          <Button className={classNames(styles.actionsButton, styles.target)}>
+                            <Icon fitted name="pencil" size="small" />
+                          </Button>
+                        </ActionsPopup>
                         <Button className={classNames(styles.actionsButton, styles.target)}>
-                          <Icon fitted name="pencil" size="small" />
+                          <Icon fitted name="tasks" size="small" />
                         </Button>
-                      </ActionsPopup>
+                      </>
                     )}
                   </>
                 ) : (

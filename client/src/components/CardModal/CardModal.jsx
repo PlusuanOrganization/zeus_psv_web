@@ -17,7 +17,7 @@ import Activities from './Activities';
 import User from '../User';
 import Label from '../Label';
 import DueDate from '../DueDate';
-import CalificationsPopup from '../CalificationsPopup/CalificationsPopup';
+import SurveyPopup from '../SurveyPopup/SurveyPopup';
 import Timer from '../Timer';
 import BoardMembershipsStep from '../BoardMembershipsStep';
 import LabelsStep from '../LabelsStep';
@@ -159,9 +159,8 @@ const CardModal = React.memo(
       onClose();
     }, [onClose]);
 
-    const showCalificationsPopup = () => {
+    const showSurvey = () => {
       isShow(!show);
-      <CalificationsPopup />;
     };
 
     const AttachmentAddPopup = usePopup(AttachmentAddStep);
@@ -467,9 +466,9 @@ const CardModal = React.memo(
                     {t('common.attachment')}
                   </Button>
                 </AttachmentAddPopup>
-                <Button onClick={showCalificationsPopup} fluid className={styles.actionButton}>
-                  <Icon name="star" className={styles.actionIcon} />
-                  Calificaciones
+                <Button fluid className={styles.actionButton} onClick={showSurvey}>
+                  <Icon name="tasks" className={styles.actionIcon} />
+                  Encuesta
                 </Button>
               </div>
               <div className={styles.actions}>
@@ -516,7 +515,7 @@ const CardModal = React.memo(
               </div>
             </Grid.Column>
           )}
-          {show && <CalificationsPopup />}
+          {show && <SurveyPopup />}
         </Grid.Row>
       </Grid>
     );

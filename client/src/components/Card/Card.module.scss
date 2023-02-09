@@ -21,6 +21,10 @@
       background: #ebeef0;
       color: #516b7a;
     }
+
+    &:last-child {
+      right: 25px;
+    }
   }
 
   .attachment {
