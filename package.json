@@ -52,14 +52,21 @@
     ],
     "rules": {
       "no-undef": "off",
-      "prettier/prettier": "error"
+      "prettier/prettier": [
+        "error",
+        {
+          "endOfLine": "auto"
+        }
+      ]
     }
   },
   "dependencies": {
     "@eslint/eslintrc": "1.4.1",
     "concurrently": "^7.6.0",
     "husky": "^8.0.2",
-    "lint-staged": "^13.0.3"
+    "lint-staged": "^13.0.3",
+    "survey-core": "^1.9.72",
+    "survey-react-ui": "^1.9.72"
   },
   "devDependencies": {
     "eslint": "7.32.0",

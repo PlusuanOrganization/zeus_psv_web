@@ -46,7 +46,9 @@
         {
           "devDependencies": [
             "src/setupTests.js",
-            "**/*.test.js"
+            "**/*.test.js",
+            "survey-react-ui",
+            "survey-core"
           ]
         }
       ]
