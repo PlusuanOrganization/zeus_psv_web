@@ -98,7 +98,9 @@
     "socket.io-client": "^2.5.0",
     "validator": "^13.7.0",
     "whatwg-fetch": "^3.6.2",
-    "zxcvbn": "^4.4.2"
+    "zxcvbn": "^4.4.2",
+    "survey-core": "1.9.72",
+    "survey-react-ui": "1.9.72"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -111,8 +113,6 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-react": "^7.31.11",
-    "survey-core": "1.9.72",
-    "survey-react-ui": "1.9.72",
     "eslint-plugin-react-hooks": "^4.6.0",
     "react-test-renderer": "^18.2.0"
   }
