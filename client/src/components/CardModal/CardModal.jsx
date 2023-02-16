@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
@@ -82,7 +82,18 @@ const CardModal = React.memo(
   }) => {
     const [t] = useTranslation();
 
-    const [show, isShow] = useState(false);
+    // Llega desde el otro componente con el bool sí es de tipo encuesta
+    const [surveyType, setSurveyType] = useState(false);
+
+    useEffect(() => {
+      setSurveyType(!surveyType);
+    }, [surveyType]);
+
+    // Sí la card es de tipo encuesta se muestra el botón para poder hacer la encuesta
+    // const [surveyBtn] = useState(surveyType);
+
+    // Evento click cambia el bool que va a mostrar la encuesta
+    const [survey, setSurvey] = useState(false);
 
     const isGalleryOpened = useRef(false);
 
@@ -159,9 +170,9 @@ const CardModal = React.memo(
       onClose();
     }, [onClose]);
 
-    const showSurvey = () => {
-      isShow(!show);
-    };
+    const showSurvey = useCallback(() => {
+      setSurvey(!survey);
+    }, [survey]);
 
     const AttachmentAddPopup = usePopup(AttachmentAddStep);
     const BoardMembershipsPopup = usePopup(BoardMembershipsStep);
@@ -470,6 +481,12 @@ const CardModal = React.memo(
                   <Icon name="tasks" className={styles.actionIcon} />
                   Encuesta
                 </Button>
+                {/* {surveyBtn && (
+                  <Button fluid className={styles.actionButton} onClick={showSurvey}>
+                    <Icon name="tasks" className={styles.actionIcon} />
+                    Encuesta
+                  </Button>
+                )} */}
               </div>
               <div className={styles.actions}>
                 <span className={styles.actionsTitle}>{t('common.actions')}</span>
@@ -515,7 +532,7 @@ const CardModal = React.memo(
               </div>
             </Grid.Column>
           )}
-          {show && <SurveyPopup />}
+          {survey && <SurveyPopup />}
         </Grid.Row>
       </Grid>
     );
@@ -548,6 +565,7 @@ CardModal.propTypes = {
   /* eslint-disable react/forbid-prop-types */
   users: PropTypes.array.isRequired,
   labels: PropTypes.array.isRequired,
+  // surveyBtnBool: PropTypes.bool.isRequired,
   tasks: PropTypes.array.isRequired,
   attachments: PropTypes.array.isRequired,
   activities: PropTypes.array.isRequired,

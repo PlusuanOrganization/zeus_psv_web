@@ -1,10 +1,12 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Button, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { Draggable } from 'react-beautiful-dnd';
+import ActionTypes from '../../constants/ActionTypes';
 import { usePopup } from '../../lib/popup';
+import socket from '../../api/socket';
 
 import { startTimer, stopTimer } from '../../utils/timer';
 import Paths from '../../constants/Paths';
@@ -54,6 +56,10 @@ const Card = React.memo(
   }) => {
     const nameEdit = useRef(null);
 
+    const [btnSurveyActive, setBtnSurveyActive] = useState(false);
+
+    const [surveyType, setSurveyType] = useState(false);
+
     const handleClick = useCallback(() => {
       if (document.activeElement) {
         document.activeElement.blur();
@@ -84,12 +90,33 @@ const Card = React.memo(
       nameEdit.current.open();
     }, []);
 
+    /* const updateCard = (idCard, data) => ({
+      type: ActionTypes.CARD_UPDATE,
+      payload: {
+        idCard,
+        data,
+      },
+    }); */
+
+    const updateCard2 = (idC, data, headers) =>
+      socket.patch(`/cards/${idC}`, transformCardData(data), headers).then((body) => ({
+        ...body,
+        item: transformCard(body.item),
+      }));
+
+    const handleSurvey = (idCard, data) => {
+      setBtnSurveyActive((btn) => !btn);
+      setSurveyType((sur) => !sur);
+      updateCard2(idCard, data);
+    };
+
     const ActionsPopup = usePopup(ActionsStep);
 
     const contentNode = (
       <>
         {coverUrl && <img src={coverUrl} alt="" className={styles.cover} />}
         <div className={styles.details}>
+          {surveyType && <Label name="Encuesta" color="#e04556" isDisabled={false} />}
           {labels.length > 0 && (
             <span className={styles.labels}>
               {labels.map((label) => (
@@ -201,7 +228,14 @@ const Card = React.memo(
                             <Icon fitted name="pencil" size="small" />
                           </Button>
                         </ActionsPopup>
-                        <Button className={classNames(styles.actionsButton, styles.target)}>
+                        <Button
+                          className={classNames(
+                            styles.actionsButton,
+                            styles.target,
+                            btnSurveyActive ? 'task' : '',
+                          )}
+                          onClick={() => handleSurvey(`card:${id}`, surveyType)}
+                        >
                           <Icon fitted name="tasks" size="small" />
                         </Button>
                       </>
@@ -253,6 +287,7 @@ Card.propTypes = {
   onLabelUpdate: PropTypes.func.isRequired,
   onLabelMove: PropTypes.func.isRequired,
   onLabelDelete: PropTypes.func.isRequired,
+  surveyBool: PropTypes.bool.isRequired,
 };
 
 Card.defaultProps = {

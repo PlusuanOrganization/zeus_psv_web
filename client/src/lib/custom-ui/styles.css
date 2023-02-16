@@ -40843,6 +40843,10 @@ textarea {
   color: rgba(0, 0, 0, 0.8);
 }
 
+.ui.button.task {
+  opacity: 1 !important;
+}
+
 div.sv-root-modern {
   position: fixed;
   background: white;

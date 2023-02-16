@@ -4,3 +4,9 @@ div.sv-root-modern {
   width: 100%;
   height: 89%;
 }
+
+div.sv-question__content .sv-text:focus {
+  border-color: var(--main-color, #b39c1a);
+  outline: none;
+  box-shadow: none;
+}

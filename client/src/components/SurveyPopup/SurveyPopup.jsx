@@ -14,6 +14,11 @@ function SurveyPopup() {
         type: 'text',
       },
       {
+        name: 'Opinion',
+        title: 'Give me your opinion:',
+        type: 'number',
+      },
+      {
         name: 'LastName',
         title: 'Enter your last name:',
         type: 'text',
@@ -22,12 +27,12 @@ function SurveyPopup() {
   };
 
   const survey = new Model(surveyJson);
-  const alertResults = useCallback((sender) => {
+  const surveyResults = useCallback((sender) => {
     const results = JSON.stringify(sender.data);
     console.log(results);
   }, []);
 
-  survey.onComplete.add(alertResults);
+  survey.onComplete.add(surveyResults);
 
   return <Survey model={survey} />;
 }

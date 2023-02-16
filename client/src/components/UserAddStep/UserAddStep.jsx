@@ -164,7 +164,7 @@ const UserAddStep = React.memo(
               onChange={handleFieldChange}
             />
             <div className={styles.text}>
-              {t('common.username')} (
+              {t('common.username')}(
               {t('common.optional', {
                 context: 'inline',
               })}
