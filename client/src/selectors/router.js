@@ -68,6 +68,12 @@ export const selectPath = createReduxOrmSelector(
             projectId: cardModel.board.projectId,
           };
         }
+        case Paths.SURVEY: {
+          return {
+            surveyId: pathsMatch.params.id,
+            userId: pathsMatch.params.userId,
+          };
+        }
         default:
       }
     }

@@ -16,6 +16,7 @@ import attachments from './attachments';
 import activities from './activities';
 import commentActivities from './comment-activities';
 import notifications from './notifications';
+import survey from './survey';
 
 export { http, socket };
 
@@ -36,4 +37,5 @@ export default {
   ...activities,
   ...commentActivities,
   ...notifications,
+  ...survey,
 };

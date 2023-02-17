@@ -9,11 +9,14 @@ const mapStateToProps = (state) => {
   const currentModal = selectors.selectCurrentModal(state);
   const currentProject = selectors.selectCurrentProject(state);
 
+  const { surveyId } = selectors.selectPath(state);
+
   return {
     isSocketDisconnected,
     currentModal,
     currentProject,
     isInitializing: isCoreInitializing,
+    surveyId,
   };
 };
 

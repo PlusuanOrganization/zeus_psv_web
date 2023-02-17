@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import { useTranslation, Trans } from 'react-i18next';
 import { Loader } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 
 import ModalTypes from '../../constants/ModalTypes';
 import FixedContainer from '../../containers/FixedContainer';
@@ -10,14 +12,30 @@ import UsersModalContainer from '../../containers/UsersModalContainer';
 import UserSettingsModalContainer from '../../containers/UserSettingsModalContainer';
 import ProjectAddModalContainer from '../../containers/ProjectAddModalContainer';
 import Background from '../Background';
-import SurveyPopup from '../SurveyPopup/SurveyPopup';
 
+import Paths from '../../constants/Paths';
+import zeusLogo from '../../assets/images/zeusLogo.svg';
+
+import stylesHeader from '../Header/Header.module.scss';
 import styles from './Core.module.scss';
 
 const Core = React.memo(
-  ({ isInitializing, isSocketDisconnected, currentModal, currentProject }) => {
+  ({ isInitializing, isSocketDisconnected, currentModal, currentProject, surveyId }) => {
     const [t] = useTranslation();
 
+    if (isInitializing && surveyId != null) {
+      return (
+        <>
+          <div className={stylesHeader.wrapper}>
+            <Link to={Paths.ROOT} className={classNames(stylesHeader.logo, stylesHeader.title)}>
+              <img src={zeusLogo} alt="Logo" />
+            </Link>
+          </div>
+          <StaticContainer />
+        </>
+      )
+    }
+    
     return (
       <>
         {isInitializing ? (
@@ -36,7 +54,6 @@ const Core = React.memo(
             {currentModal === ModalTypes.USERS && <UsersModalContainer />}
             {currentModal === ModalTypes.USER_SETTINGS && <UserSettingsModalContainer />}
             {currentModal === ModalTypes.PROJECT_ADD && <ProjectAddModalContainer />}
-            {currentModal === ModalTypes.SURVEY && <SurveyPopup />}
           </>
         )}
         {isSocketDisconnected && (

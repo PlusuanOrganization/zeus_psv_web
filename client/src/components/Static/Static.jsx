@@ -6,11 +6,20 @@ import { Icon, Loader } from 'semantic-ui-react';
 
 import ProjectsContainer from '../../containers/ProjectsContainer';
 import BoardContainer from '../../containers/BoardContainer';
+import SurveyContainer from '../../containers/SurveyContainer';
 
 import styles from './Static.module.scss';
 
-function Static({ projectId, cardId, board }) {
+function Static({ projectId, cardId, board, surveyId, userId }) {
   const [t] = useTranslation();
+
+  if (surveyId != null) {
+    return (
+      <div className={styles.wrapper}>
+        <SurveyContainer />
+      </div>
+    );
+  }
 
   if (projectId === undefined) {
     return (
@@ -99,12 +108,16 @@ Static.propTypes = {
   projectId: PropTypes.string,
   cardId: PropTypes.string,
   board: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+  surveyId: PropTypes.string,
+  userId: PropTypes.string,
 };
 
 Static.defaultProps = {
   projectId: undefined,
   cardId: undefined,
   board: undefined,
+  surveyId: undefined,
+  userId: undefined,
 };
 
 export default Static;
