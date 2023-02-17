@@ -7,23 +7,59 @@ import 'survey-core/modern.min.css';
 
 function SurveyPopup() {
   const surveyJson = {
-    elements: [
+    /* pages: [
       {
-        name: 'FirstName',
-        title: 'Enter your first name:',
-        type: 'text',
+        elements: [
+          {
+            name: 'satisfaction-score',
+            title: 'How would product?',
+            type: 'radiogroup',
+            choices: [
+              { value: 5, text: 'Fully satisfying' },
+              { value: 4, text: 'Generally satisfying' },
+              { value: 3, text: 'Neutral' },
+              { value: 2, text: 'Rather unsatisfying' },
+              { value: 1, text: 'Not satisfying at all' },
+            ],
+            isRequired: true,
+          },
+        ],
       },
       {
-        name: 'Opinion',
-        title: 'Give me your opinion:',
-        type: 'number',
+        elements: [
+          {
+            name: 'what-wo',
+            title: 'What can atisfying?',
+            type: 'comment',
+          },
+          {
+            name: 'nps-score',
+            title: 'On a scale of zero to ten',
+            type: 'rating',
+            rateMin: 0,
+            rateMax: 10,
+          },
+        ],
       },
       {
-        name: 'LastName',
-        title: 'Enter your last name:',
-        type: 'text',
+        elements: [
+          {
+            name: 'how-can-we-improve',
+            title: 'In your opinion, ?',
+            type: 'comment',
+          },
+        ],
       },
-    ],
+      {
+        elements: [
+          {
+            name: 'disappointing-experience',
+            title: 'Please let us know why ',
+            type: 'comment',
+          },
+        ],
+      },
+    ], */
   };
 
   const survey = new Model(surveyJson);

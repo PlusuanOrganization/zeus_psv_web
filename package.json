@@ -52,6 +52,7 @@
     ],
     "rules": {
       "no-undef": "off",
+      "no-console": "off",
       "prettier/prettier": [
         "error",
         {

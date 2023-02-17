@@ -4,9 +4,7 @@ import classNames from 'classnames';
 import { Button, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { Draggable } from 'react-beautiful-dnd';
-import ActionTypes from '../../constants/ActionTypes';
 import { usePopup } from '../../lib/popup';
-import socket from '../../api/socket';
 
 import { startTimer, stopTimer } from '../../utils/timer';
 import Paths from '../../constants/Paths';
@@ -19,6 +17,7 @@ import DueDate from '../DueDate';
 import Timer from '../Timer';
 
 import styles from './Card.module.scss';
+// import SurveyPopup from '../SurveyPopup/SurveyPopup';
 
 const Card = React.memo(
   ({
@@ -98,17 +97,24 @@ const Card = React.memo(
       },
     }); */
 
-    const updateCard2 = (idC, data, headers) =>
+    /* const updateCard2 = (idC, data, headers) =>
       socket.patch(`/cards/${idC}`, transformCardData(data), headers).then((body) => ({
         ...body,
         item: transformCard(body.item),
-      }));
+      })); */
 
-    const handleSurvey = (idCard, data) => {
+    /* const handleSurvey = (idCard, data) => {
       setBtnSurveyActive((btn) => !btn);
       setSurveyType((sur) => !sur);
-      updateCard2(idCard, data);
-    };
+    }; */
+
+    const handleSurvey = useCallback(() => {
+      if (document.activeElement) {
+        document.activeElement.blur();
+      }
+      setBtnSurveyActive((btn) => !btn);
+      setSurveyType((sur) => !sur);
+    }, []);
 
     const ActionsPopup = usePopup(ActionsStep);
 
@@ -228,16 +234,18 @@ const Card = React.memo(
                             <Icon fitted name="pencil" size="small" />
                           </Button>
                         </ActionsPopup>
-                        <Button
+                        <Link
+                          to={Paths.SURVEY.replace(':id', id)}
                           className={classNames(
                             styles.actionsButton,
                             styles.target,
                             btnSurveyActive ? 'task' : '',
                           )}
-                          onClick={() => handleSurvey(`card:${id}`, surveyType)}
+                          onClick={handleSurvey}
                         >
                           <Icon fitted name="tasks" size="small" />
-                        </Button>
+                          {contentNode}
+                        </Link>
                       </>
                     )}
                   </>

@@ -10,6 +10,7 @@ import UsersModalContainer from '../../containers/UsersModalContainer';
 import UserSettingsModalContainer from '../../containers/UserSettingsModalContainer';
 import ProjectAddModalContainer from '../../containers/ProjectAddModalContainer';
 import Background from '../Background';
+import SurveyPopup from '../SurveyPopup/SurveyPopup';
 
 import styles from './Core.module.scss';
 
@@ -35,6 +36,7 @@ const Core = React.memo(
             {currentModal === ModalTypes.USERS && <UsersModalContainer />}
             {currentModal === ModalTypes.USER_SETTINGS && <UserSettingsModalContainer />}
             {currentModal === ModalTypes.PROJECT_ADD && <ProjectAddModalContainer />}
+            {currentModal === ModalTypes.SURVEY && <SurveyPopup />}
           </>
         )}
         {isSocketDisconnected && (

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +17,6 @@ import Activities from './Activities';
 import User from '../User';
 import Label from '../Label';
 import DueDate from '../DueDate';
-import SurveyPopup from '../SurveyPopup/SurveyPopup';
 import Timer from '../Timer';
 import BoardMembershipsStep from '../BoardMembershipsStep';
 import LabelsStep from '../LabelsStep';
@@ -81,19 +80,6 @@ const CardModal = React.memo(
     onClose,
   }) => {
     const [t] = useTranslation();
-
-    // Llega desde el otro componente con el bool sí es de tipo encuesta
-    const [surveyType, setSurveyType] = useState(false);
-
-    useEffect(() => {
-      setSurveyType(!surveyType);
-    }, [surveyType]);
-
-    // Sí la card es de tipo encuesta se muestra el botón para poder hacer la encuesta
-    // const [surveyBtn] = useState(surveyType);
-
-    // Evento click cambia el bool que va a mostrar la encuesta
-    const [survey, setSurvey] = useState(false);
 
     const isGalleryOpened = useRef(false);
 
@@ -169,10 +155,6 @@ const CardModal = React.memo(
 
       onClose();
     }, [onClose]);
-
-    const showSurvey = useCallback(() => {
-      setSurvey(!survey);
-    }, [survey]);
 
     const AttachmentAddPopup = usePopup(AttachmentAddStep);
     const BoardMembershipsPopup = usePopup(BoardMembershipsStep);
@@ -477,16 +459,6 @@ const CardModal = React.memo(
                     {t('common.attachment')}
                   </Button>
                 </AttachmentAddPopup>
-                <Button fluid className={styles.actionButton} onClick={showSurvey}>
-                  <Icon name="tasks" className={styles.actionIcon} />
-                  Encuesta
-                </Button>
-                {/* {surveyBtn && (
-                  <Button fluid className={styles.actionButton} onClick={showSurvey}>
-                    <Icon name="tasks" className={styles.actionIcon} />
-                    Encuesta
-                  </Button>
-                )} */}
               </div>
               <div className={styles.actions}>
                 <span className={styles.actionsTitle}>{t('common.actions')}</span>
@@ -532,7 +504,6 @@ const CardModal = React.memo(
               </div>
             </Grid.Column>
           )}
-          {survey && <SurveyPopup />}
         </Grid.Row>
       </Grid>
     );
