@@ -1,24 +1,10 @@
 import { connect } from 'react-redux';
 
-import { Model } from 'survey-core';
-import { Survey } from 'survey-react-ui';
-
-import api from '../api';
-
 import 'survey-core/modern.min.css';
+import SurveyPopup from '../components/SurveyPopup/SurveyPopup';
 
 const mapStateToProps = (state) => {
-  api.getSurvey(state.surveyId, {});
-  
-  const surveyJson = {};
-
-  console.log('surveyJson', surveyJson);
-    
-  const model = new Model(surveyJson);
-
-  return {
-    model: model,
-  };
+  return {};
 };
 
-export default connect(mapStateToProps)(Survey);
+export default connect(mapStateToProps)(SurveyPopup);
