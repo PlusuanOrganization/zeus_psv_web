@@ -15,7 +15,7 @@ function SurveyPopup() {
       setSurvey(new Model(res));
     });
   }
-
+  
   const surveyResults = useCallback((sender) => {
     const results = JSON.stringify(sender.data);
     console.log(results);
