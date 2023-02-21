@@ -1,4 +1,5 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
@@ -24,6 +25,8 @@ import DueDateEditStep from '../DueDateEditStep';
 import TimerEditStep from '../TimerEditStep';
 import CardMoveStep from '../CardMoveStep';
 import DeleteStep from '../DeleteStep';
+import Paths from '../../constants/Paths';
+import cards from '../../api/cards';
 
 import styles from './CardModal.module.scss';
 
@@ -80,6 +83,8 @@ const CardModal = React.memo(
     onClose,
   }) => {
     const [t] = useTranslation();
+
+    const [surveyBtn, setSurveyBtn] = useState(false);
 
     const isGalleryOpened = useRef(false);
 
@@ -155,6 +160,16 @@ const CardModal = React.memo(
 
       onClose();
     }, [onClose]);
+
+    /* useEffect(() => {
+      allLabels.foreach((label) => {
+        label === 'Encuesta' ? setSurveyBtn(!surveyBtn) : '';
+      });
+    }, [allLabels]); */
+
+    /* const showSurveyBtn = useCallback(() => {
+      setSurveyBtn(!surveyBtn);
+    }, [surveyBtn]); */
 
     const AttachmentAddPopup = usePopup(AttachmentAddStep);
     const BoardMembershipsPopup = usePopup(BoardMembershipsStep);
@@ -424,6 +439,18 @@ const CardModal = React.memo(
                     {t('common.members')}
                   </Button>
                 </BoardMembershipsPopup>
+                <BoardMembershipsPopup
+                  items={allBoardMemberships}
+                  currentUserIds={userIds}
+                  onUserSelect={onUserAdd}
+                  onUserDeselect={onUserRemove}
+                  title="Grupo"
+                >
+                  <Button fluid className={styles.actionButton}>
+                    <Icon name="user" className={styles.actionIcon} />
+                    {t('Grupo')}
+                  </Button>
+                </BoardMembershipsPopup>
                 <LabelsPopup
                   items={allLabels}
                   currentIds={labelIds}
@@ -439,6 +466,18 @@ const CardModal = React.memo(
                     {t('common.labels')}
                   </Button>
                 </LabelsPopup>
+                <DueDateEditPopup
+                  defaultValue={dueDate}
+                  title="Fecha de Inicio"
+                  onUpdate={handleDueDateUpdate}
+                >
+                  <Button fluid className={styles.actionButton}>
+                    <Icon name="calendar check" className={styles.actionIcon} />
+                    {t('Fecha de Inicio', {
+                      context: 'title',
+                    })}
+                  </Button>
+                </DueDateEditPopup>
                 <DueDateEditPopup defaultValue={dueDate} onUpdate={handleDueDateUpdate}>
                   <Button fluid className={styles.actionButton}>
                     <Icon name="calendar check outline" className={styles.actionIcon} />
@@ -459,6 +498,15 @@ const CardModal = React.memo(
                     {t('common.attachment')}
                   </Button>
                 </AttachmentAddPopup>
+                {surveyBtn && (
+                  <Link
+                    to={Paths.SURVEY.replace(':id', cards.id)}
+                    className={classNames(styles.actionButton, styles.target, 'anchorSurvey')}
+                  >
+                    <Icon fitted name="tasks" size="small" />
+                    Encuesta
+                  </Link>
+                )}
               </div>
               <div className={styles.actions}>
                 <span className={styles.actionsTitle}>{t('common.actions')}</span>

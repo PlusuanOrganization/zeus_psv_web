@@ -9,6 +9,7 @@ import { Input, Popup } from '../../lib/custom-ui';
 import { useField, useSteps } from '../../hooks';
 import DroppableTypes from '../../constants/DroppableTypes';
 import AddStep from './AddStep';
+import Label from '../Label';
 import EditStep from './EditStep';
 import Item from './Item';
 

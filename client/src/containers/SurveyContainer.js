@@ -1,9 +1,10 @@
 import { connect } from 'react-redux';
-
-import 'survey-core/modern.min.css';
 import SurveyPopup from '../components/SurveyPopup/SurveyPopup';
 
+import 'survey-core/modern.min.css';
+
 const mapStateToProps = (state) => {
+  console.log(state);
   return {};
 };
 

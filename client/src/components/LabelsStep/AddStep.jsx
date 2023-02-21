@@ -25,7 +25,14 @@ const AddStep = React.memo(({ defaultData, onCreate, onBack }) => {
       name: data.name.trim() || null,
     };
 
-    onCreate(cleanData);
+    const hardSurveyLabel = {
+      ...data,
+      name: 'Encuesta',
+    };
+
+    onCreate(data.name == null ? cleanData : hardSurveyLabel);
+    /* onCreate(hardSurveyLabel); */
+
     onBack();
   }, [data, onCreate, onBack]);
 
@@ -39,6 +46,7 @@ const AddStep = React.memo(({ defaultData, onCreate, onBack }) => {
       <Popup.Content>
         <Form onSubmit={handleSubmit}>
           <Editor data={data} onFieldChange={handleFieldChange} />
+          <Button positive content="Encuesta" className={styles.submitButton} />
           <Button positive content={t('action.createLabel')} className={styles.submitButton} />
         </Form>
       </Popup.Content>

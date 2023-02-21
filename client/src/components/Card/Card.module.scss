@@ -21,10 +21,6 @@
       background: #ebeef0;
       color: #516b7a;
     }
-
-    &:last-child {
-      right: 25px;
-    }
   }
 
   .attachment {
@@ -130,10 +126,12 @@
     margin-top: 8px;
   }
 
-  div[title="Encuesta"] {
-    background: #eb5a46;
-    width: fit-content;
-    line-height: 24px;
-    padding: 0 5px;
+  .anchorSurvey {
+    width: 100%;
+    display: block;
+
+    & i {
+      margin-right: 8px !important;
+    }
   }
 }
