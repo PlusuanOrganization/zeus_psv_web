@@ -84,7 +84,7 @@ const CardModal = React.memo(
   }) => {
     const [t] = useTranslation();
 
-    const [surveyBtn, setSurveyBtn] = useState(false);
+    const [surveyBtn] = useState(true);
 
     const isGalleryOpened = useRef(false);
 
@@ -161,15 +161,15 @@ const CardModal = React.memo(
       onClose();
     }, [onClose]);
 
-    /* useEffect(() => {
-      allLabels.foreach((label) => {
-        label === 'Encuesta' ? setSurveyBtn(!surveyBtn) : '';
-      });
-    }, [allLabels]); */
-
     /* const showSurveyBtn = useCallback(() => {
       setSurveyBtn(!surveyBtn);
-    }, [surveyBtn]); */
+    }, [surveyBtn]);
+
+    const checkIfSurvey = labels.forEach((label) => {
+      if (label.name === 'Encuesta') {
+        showSurveyBtn;
+      }
+    }); */
 
     const AttachmentAddPopup = usePopup(AttachmentAddStep);
     const BoardMembershipsPopup = usePopup(BoardMembershipsStep);
@@ -499,13 +499,18 @@ const CardModal = React.memo(
                   </Button>
                 </AttachmentAddPopup>
                 {surveyBtn && (
-                  <Link
-                    to={Paths.SURVEY.replace(':id', cards.id)}
-                    className={classNames(styles.actionButton, styles.target, 'anchorSurvey')}
+                  <BoardMembershipsPopup
+                    items={allBoardMemberships}
+                    currentUserIds={userIds}
+                    onUserSelect={onUserAdd}
+                    onUserDeselect={onUserRemove}
+                    title="Encuesta"
                   >
-                    <Icon fitted name="tasks" size="small" />
-                    Encuesta
-                  </Link>
+                    <Button fluid className={styles.actionButton}>
+                      <Icon name="tasks" className={styles.actionIcon} />
+                      {t('Encuesta')}
+                    </Button>
+                  </BoardMembershipsPopup>
                 )}
               </div>
               <div className={styles.actions}>

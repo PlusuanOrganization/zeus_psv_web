@@ -22,16 +22,10 @@ const AddStep = React.memo(({ defaultData, onCreate, onBack }) => {
   const handleSubmit = useCallback(() => {
     const cleanData = {
       ...data,
-      name: data.name.trim() || null,
+      name: data.name === '' ? (data.name = 'Encuesta') : data.name.trim(),
     };
 
-    const hardSurveyLabel = {
-      ...data,
-      name: 'Encuesta',
-    };
-
-    onCreate(data.name == null ? cleanData : hardSurveyLabel);
-    /* onCreate(hardSurveyLabel); */
+    onCreate(cleanData);
 
     onBack();
   }, [data, onCreate, onBack]);
