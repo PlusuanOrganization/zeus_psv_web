@@ -21998,6 +21998,13 @@ ol.ui.horizontal.list li:before,
   width: 75% !important;
 }
 
+.ui.grid > .row > [class*='twelve wide'].column.replyList{
+  width: 100% !important;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
 .ui.grid > .row > [class*='thirteen wide'].column,
 .ui.grid > .column.row > [class*='thirteen wide'].column,
 .ui.grid > [class*='thirteen wide'].column,

@@ -1,5 +1,4 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
@@ -25,8 +24,9 @@ import DueDateEditStep from '../DueDateEditStep';
 import TimerEditStep from '../TimerEditStep';
 import CardMoveStep from '../CardMoveStep';
 import DeleteStep from '../DeleteStep';
-import Paths from '../../constants/Paths';
-import cards from '../../api/cards';
+import ReplayStep from './ReplayStep';
+/* import Paths from '../../constants/Paths';
+import cards from '../../api/cards'; */
 
 import styles from './CardModal.module.scss';
 
@@ -85,6 +85,8 @@ const CardModal = React.memo(
     const [t] = useTranslation();
 
     const [surveyBtn] = useState(true);
+
+    const [showReplay, setShowReplay] = useState(false);
 
     const isGalleryOpened = useRef(false);
 
@@ -161,15 +163,22 @@ const CardModal = React.memo(
       onClose();
     }, [onClose]);
 
+    /* const showReplayContainer = useCallback(() => {
+      setShowReplay(!showReplay);
+    }, [showReplay]); */
+
     /* const showSurveyBtn = useCallback(() => {
       setSurveyBtn(!surveyBtn);
     }, [surveyBtn]);
+     */
 
-    const checkIfSurvey = labels.forEach((label) => {
-      if (label.name === 'Encuesta') {
-        showSurveyBtn;
-      }
-    }); */
+    /* const checkIfSurvey = useCallback(() => {
+      labels.forEach((label) => {
+        if (label.name === 'Encuesta') {
+          showSurveyBtn;
+        }
+      });
+    }, [labels]); */
 
     const AttachmentAddPopup = usePopup(AttachmentAddStep);
     const BoardMembershipsPopup = usePopup(BoardMembershipsStep);
@@ -199,61 +208,81 @@ const CardModal = React.memo(
           </Grid.Column>
         </Grid.Row>
         <Grid.Row className={styles.modalPadding}>
-          <Grid.Column width={canEdit ? 12 : 16} className={styles.contentPadding}>
-            {(users.length > 0 || labels.length > 0 || dueDate || timer) && (
-              <div className={styles.moduleWrapper}>
-                {users.length > 0 && (
-                  <div className={styles.attachments}>
-                    <div className={styles.text}>
-                      {t('common.members', {
-                        context: 'title',
-                      })}
-                    </div>
-                    {users.map((user) => (
-                      <span key={user.id} className={styles.attachment}>
-                        {canEdit ? (
+          {!showReplay ? (
+            <>
+              <Grid.Column width={canEdit ? 12 : 16} className={styles.contentPadding}>
+                {(users.length > 0 || labels.length > 0 || dueDate || timer) && (
+                  <div className={styles.moduleWrapper}>
+                    {users.length > 0 && (
+                      <div className={styles.attachments}>
+                        <div className={styles.text}>
+                          {t('common.members', {
+                            context: 'title',
+                          })}
+                        </div>
+                        {users.map((user) => (
+                          <span key={user.id} className={styles.attachment}>
+                            {canEdit ? (
+                              <BoardMembershipsPopup
+                                items={allBoardMemberships}
+                                currentUserIds={userIds}
+                                onUserSelect={onUserAdd}
+                                onUserDeselect={onUserRemove}
+                              >
+                                <User name={user.name} avatarUrl={user.avatarUrl} />
+                              </BoardMembershipsPopup>
+                            ) : (
+                              <User name={user.name} avatarUrl={user.avatarUrl} />
+                            )}
+                          </span>
+                        ))}
+                        {canEdit && (
                           <BoardMembershipsPopup
                             items={allBoardMemberships}
                             currentUserIds={userIds}
                             onUserSelect={onUserAdd}
                             onUserDeselect={onUserRemove}
                           >
-                            <User name={user.name} avatarUrl={user.avatarUrl} />
+                            <button
+                              type="button"
+                              className={classNames(styles.attachment, styles.dueDate)}
+                            >
+                              <Icon name="add" size="small" className={styles.addAttachment} />
+                            </button>
                           </BoardMembershipsPopup>
-                        ) : (
-                          <User name={user.name} avatarUrl={user.avatarUrl} />
                         )}
-                      </span>
-                    ))}
-                    {canEdit && (
-                      <BoardMembershipsPopup
-                        items={allBoardMemberships}
-                        currentUserIds={userIds}
-                        onUserSelect={onUserAdd}
-                        onUserDeselect={onUserRemove}
-                      >
-                        <button
-                          type="button"
-                          className={classNames(styles.attachment, styles.dueDate)}
-                        >
-                          <Icon name="add" size="small" className={styles.addAttachment} />
-                        </button>
-                      </BoardMembershipsPopup>
+                      </div>
                     )}
-                  </div>
-                )}
-                {labels.length > 0 && (
-                  <div className={styles.attachments}>
-                    <div className={styles.text}>
-                      {t('common.labels', {
-                        context: 'title',
-                      })}
-                    </div>
-                    {labels.map((label) => (
-                      <span key={label.id} className={styles.attachment}>
-                        {canEdit ? (
+                    {labels.length > 0 && (
+                      <div className={styles.attachments}>
+                        <div className={styles.text}>
+                          {t('common.labels', {
+                            context: 'title',
+                          })}
+                        </div>
+                        {labels.map((label) => (
+                          <span key={label.id} className={styles.attachment}>
+                            {canEdit ? (
+                              <LabelsPopup
+                                key={label.id}
+                                items={allLabels}
+                                currentIds={labelIds}
+                                onSelect={onLabelAdd}
+                                onDeselect={onLabelRemove}
+                                onCreate={onLabelCreate}
+                                onUpdate={onLabelUpdate}
+                                onMove={onLabelMove}
+                                onDelete={onLabelDelete}
+                              >
+                                <Label name={label.name} color={label.color} />
+                              </LabelsPopup>
+                            ) : (
+                              <Label name={label.name} color={label.color} />
+                            )}
+                          </span>
+                        ))}
+                        {canEdit && (
                           <LabelsPopup
-                            key={label.id}
                             items={allLabels}
                             currentIds={labelIds}
                             onSelect={onLabelAdd}
@@ -263,298 +292,300 @@ const CardModal = React.memo(
                             onMove={onLabelMove}
                             onDelete={onLabelDelete}
                           >
-                            <Label name={label.name} color={label.color} />
+                            <button
+                              type="button"
+                              className={classNames(styles.attachment, styles.dueDate)}
+                            >
+                              <Icon name="add" size="small" className={styles.addAttachment} />
+                            </button>
                           </LabelsPopup>
-                        ) : (
-                          <Label name={label.name} color={label.color} />
                         )}
-                      </span>
-                    ))}
-                    {canEdit && (
-                      <LabelsPopup
-                        items={allLabels}
-                        currentIds={labelIds}
-                        onSelect={onLabelAdd}
-                        onDeselect={onLabelRemove}
-                        onCreate={onLabelCreate}
-                        onUpdate={onLabelUpdate}
-                        onMove={onLabelMove}
-                        onDelete={onLabelDelete}
-                      >
-                        <button
-                          type="button"
-                          className={classNames(styles.attachment, styles.dueDate)}
-                        >
-                          <Icon name="add" size="small" className={styles.addAttachment} />
-                        </button>
-                      </LabelsPopup>
+                      </div>
+                    )}
+                    {dueDate && (
+                      <div className={styles.attachments}>
+                        <div className={styles.text}>
+                          {t('common.dueDate', {
+                            context: 'title',
+                          })}
+                        </div>
+                        <span className={styles.attachment}>
+                          {canEdit ? (
+                            <DueDateEditPopup defaultValue={dueDate} onUpdate={handleDueDateUpdate}>
+                              <DueDate value={dueDate} />
+                            </DueDateEditPopup>
+                          ) : (
+                            <DueDate value={dueDate} />
+                          )}
+                        </span>
+                      </div>
+                    )}
+                    {timer && (
+                      <div className={styles.attachments}>
+                        <div className={styles.text}>
+                          {t('common.timer', {
+                            context: 'title',
+                          })}
+                        </div>
+                        <span className={styles.attachment}>
+                          {canEdit ? (
+                            <TimerEditPopup defaultValue={timer} onUpdate={handleTimerUpdate}>
+                              <Timer startedAt={timer.startedAt} total={timer.total} />
+                            </TimerEditPopup>
+                          ) : (
+                            <Timer startedAt={timer.startedAt} total={timer.total} />
+                          )}
+                        </span>
+                        {canEdit && (
+                          <button
+                            onClick={handleToggleTimerClick}
+                            type="button"
+                            className={classNames(styles.attachment, styles.dueDate)}
+                          >
+                            <Icon
+                              name={timer.startedAt ? 'pause' : 'play'}
+                              size="small"
+                              className={styles.addAttachment}
+                            />
+                          </button>
+                        )}
+                      </div>
                     )}
                   </div>
                 )}
-                {dueDate && (
-                  <div className={styles.attachments}>
-                    <div className={styles.text}>
-                      {t('common.dueDate', {
-                        context: 'title',
-                      })}
-                    </div>
-                    <span className={styles.attachment}>
+                {(description || canEdit) && (
+                  <div className={styles.contentModule}>
+                    <div className={styles.moduleWrapper}>
+                      <Icon name="align justify" className={styles.moduleIcon} />
+                      <div className={styles.moduleHeader}>{t('common.description')}</div>
                       {canEdit ? (
-                        <DueDateEditPopup defaultValue={dueDate} onUpdate={handleDueDateUpdate}>
-                          <DueDate value={dueDate} />
-                        </DueDateEditPopup>
-                      ) : (
-                        <DueDate value={dueDate} />
-                      )}
-                    </span>
-                  </div>
-                )}
-                {timer && (
-                  <div className={styles.attachments}>
-                    <div className={styles.text}>
-                      {t('common.timer', {
-                        context: 'title',
-                      })}
-                    </div>
-                    <span className={styles.attachment}>
-                      {canEdit ? (
-                        <TimerEditPopup defaultValue={timer} onUpdate={handleTimerUpdate}>
-                          <Timer startedAt={timer.startedAt} total={timer.total} />
-                        </TimerEditPopup>
-                      ) : (
-                        <Timer startedAt={timer.startedAt} total={timer.total} />
-                      )}
-                    </span>
-                    {canEdit && (
-                      <button
-                        onClick={handleToggleTimerClick}
-                        type="button"
-                        className={classNames(styles.attachment, styles.dueDate)}
-                      >
-                        <Icon
-                          name={timer.startedAt ? 'pause' : 'play'}
-                          size="small"
-                          className={styles.addAttachment}
-                        />
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-            {(description || canEdit) && (
-              <div className={styles.contentModule}>
-                <div className={styles.moduleWrapper}>
-                  <Icon name="align justify" className={styles.moduleIcon} />
-                  <div className={styles.moduleHeader}>{t('common.description')}</div>
-                  {canEdit ? (
-                    <DescriptionEdit defaultValue={description} onUpdate={handleDescriptionUpdate}>
-                      {description ? (
-                        <button
-                          type="button"
-                          className={classNames(styles.descriptionText, styles.cursorPointer)}
+                        <DescriptionEdit
+                          defaultValue={description}
+                          onUpdate={handleDescriptionUpdate}
                         >
+                          {description ? (
+                            <button
+                              type="button"
+                              className={classNames(styles.descriptionText, styles.cursorPointer)}
+                            >
+                              <Markdown linkStopPropagation linkTarget="_blank">
+                                {description}
+                              </Markdown>
+                            </button>
+                          ) : (
+                            <button type="button" className={styles.descriptionButton}>
+                              <span className={styles.descriptionButtonText}>
+                                {t('action.addMoreDetailedDescription')}
+                              </span>
+                            </button>
+                          )}
+                        </DescriptionEdit>
+                      ) : (
+                        <div className={styles.descriptionText}>
                           <Markdown linkStopPropagation linkTarget="_blank">
                             {description}
                           </Markdown>
-                        </button>
-                      ) : (
-                        <button type="button" className={styles.descriptionButton}>
-                          <span className={styles.descriptionButtonText}>
-                            {t('action.addMoreDetailedDescription')}
-                          </span>
-                        </button>
+                        </div>
                       )}
-                    </DescriptionEdit>
-                  ) : (
-                    <div className={styles.descriptionText}>
-                      <Markdown linkStopPropagation linkTarget="_blank">
-                        {description}
-                      </Markdown>
                     </div>
-                  )}
-                </div>
-              </div>
-            )}
-            {(tasks.length > 0 || canEdit) && (
-              <div className={styles.contentModule}>
-                <div className={styles.moduleWrapper}>
-                  <Icon name="check square outline" className={styles.moduleIcon} />
-                  <div className={styles.moduleHeader}>{t('common.tasks')}</div>
-                  <Tasks
-                    items={tasks}
-                    canEdit={canEdit}
-                    onCreate={onTaskCreate}
-                    onUpdate={onTaskUpdate}
-                    onMove={onTaskMove}
-                    onDelete={onTaskDelete}
-                  />
-                </div>
-              </div>
-            )}
-            {attachments.length > 0 && (
-              <div className={styles.contentModule}>
-                <div className={styles.moduleWrapper}>
-                  <Icon name="attach" className={styles.moduleIcon} />
-                  <div className={styles.moduleHeader}>{t('common.attachments')}</div>
-                  <Attachments
-                    items={attachments}
-                    canEdit={canEdit}
-                    onUpdate={onAttachmentUpdate}
-                    onDelete={onAttachmentDelete}
-                    onCoverUpdate={handleCoverUpdate}
-                    onGalleryOpen={handleGalleryOpen}
-                    onGalleryClose={handleGalleryClose}
-                  />
-                </div>
-              </div>
-            )}
-            <Activities
-              items={activities}
-              isFetching={isActivitiesFetching}
-              isAllFetched={isAllActivitiesFetched}
-              isDetailsVisible={isActivitiesDetailsVisible}
-              isDetailsFetching={isActivitiesDetailsFetching}
-              canEdit={canEditCommentActivities}
-              canEditAllComments={canEditAllCommentActivities}
-              onFetch={onActivitiesFetch}
-              onDetailsToggle={onActivitiesDetailsToggle}
-              onCommentCreate={onCommentActivityCreate}
-              onCommentUpdate={onCommentActivityUpdate}
-              onCommentDelete={onCommentActivityDelete}
-            />
-          </Grid.Column>
-          {canEdit && (
-            <Grid.Column width={4} className={styles.sidebarPadding}>
-              <div className={styles.actions}>
-                <span className={styles.actionsTitle}>{t('action.addToCard')}</span>
-                <BoardMembershipsPopup
-                  items={allBoardMemberships}
-                  currentUserIds={userIds}
-                  onUserSelect={onUserAdd}
-                  onUserDeselect={onUserRemove}
-                >
-                  <Button fluid className={styles.actionButton}>
-                    <Icon name="user outline" className={styles.actionIcon} />
-                    {t('common.members')}
-                  </Button>
-                </BoardMembershipsPopup>
-                <BoardMembershipsPopup
-                  items={allBoardMemberships}
-                  currentUserIds={userIds}
-                  onUserSelect={onUserAdd}
-                  onUserDeselect={onUserRemove}
-                  title="Grupo"
-                >
-                  <Button fluid className={styles.actionButton}>
-                    <Icon name="user" className={styles.actionIcon} />
-                    {t('Grupo')}
-                  </Button>
-                </BoardMembershipsPopup>
-                <LabelsPopup
-                  items={allLabels}
-                  currentIds={labelIds}
-                  onSelect={onLabelAdd}
-                  onDeselect={onLabelRemove}
-                  onCreate={onLabelCreate}
-                  onUpdate={onLabelUpdate}
-                  onMove={onLabelMove}
-                  onDelete={onLabelDelete}
-                >
-                  <Button fluid className={styles.actionButton}>
-                    <Icon name="bookmark outline" className={styles.actionIcon} />
-                    {t('common.labels')}
-                  </Button>
-                </LabelsPopup>
-                <DueDateEditPopup
-                  defaultValue={dueDate}
-                  title="Fecha de Inicio"
-                  onUpdate={handleDueDateUpdate}
-                >
-                  <Button fluid className={styles.actionButton}>
-                    <Icon name="calendar check" className={styles.actionIcon} />
-                    {t('Fecha de Inicio', {
-                      context: 'title',
-                    })}
-                  </Button>
-                </DueDateEditPopup>
-                <DueDateEditPopup defaultValue={dueDate} onUpdate={handleDueDateUpdate}>
-                  <Button fluid className={styles.actionButton}>
-                    <Icon name="calendar check outline" className={styles.actionIcon} />
-                    {t('common.dueDate', {
-                      context: 'title',
-                    })}
-                  </Button>
-                </DueDateEditPopup>
-                <TimerEditPopup defaultValue={timer} onUpdate={handleTimerUpdate}>
-                  <Button fluid className={styles.actionButton}>
-                    <Icon name="clock outline" className={styles.actionIcon} />
-                    {t('common.timer')}
-                  </Button>
-                </TimerEditPopup>
-                <AttachmentAddPopup onCreate={onAttachmentCreate}>
-                  <Button fluid className={styles.actionButton}>
-                    <Icon name="attach" className={styles.actionIcon} />
-                    {t('common.attachment')}
-                  </Button>
-                </AttachmentAddPopup>
-                {surveyBtn && (
-                  <BoardMembershipsPopup
-                    items={allBoardMemberships}
-                    currentUserIds={userIds}
-                    onUserSelect={onUserAdd}
-                    onUserDeselect={onUserRemove}
-                    title="Encuesta"
-                  >
-                    <Button fluid className={styles.actionButton}>
-                      <Icon name="tasks" className={styles.actionIcon} />
-                      {t('Encuesta')}
-                    </Button>
-                  </BoardMembershipsPopup>
+                  </div>
                 )}
-              </div>
-              <div className={styles.actions}>
-                <span className={styles.actionsTitle}>{t('common.actions')}</span>
-                <Button
-                  fluid
-                  className={styles.actionButton}
-                  onClick={handleToggleSubscriptionClick}
-                >
-                  <Icon name="paper plane outline" className={styles.actionIcon} />
-                  {isSubscribed ? t('action.unsubscribe') : t('action.subscribe')}
-                </Button>
-                <CardMovePopup
-                  projectsToLists={allProjectsToLists}
-                  defaultPath={{
-                    projectId,
-                    boardId,
-                    listId,
-                  }}
-                  onMove={onMove}
-                  onTransfer={onTransfer}
-                  onBoardFetch={onBoardFetch}
-                >
-                  <Button
-                    fluid
-                    className={styles.actionButton}
-                    onClick={handleToggleSubscriptionClick}
-                  >
-                    <Icon name="share square outline" className={styles.actionIcon} />
-                    {t('action.move')}
-                  </Button>
-                </CardMovePopup>
-                <DeletePopup
-                  title="common.deleteCard"
-                  content="common.areYouSureYouWantToDeleteThisCard"
-                  buttonContent="action.deleteCard"
-                  onConfirm={onDelete}
-                >
-                  <Button fluid className={styles.actionButton}>
-                    <Icon name="trash alternate outline" className={styles.actionIcon} />
-                    {t('action.delete')}
-                  </Button>
-                </DeletePopup>
-              </div>
+                {(tasks.length > 0 || canEdit) && (
+                  <div className={styles.contentModule}>
+                    <div className={styles.moduleWrapper}>
+                      <Icon name="check square outline" className={styles.moduleIcon} />
+                      <div className={styles.moduleHeader}>{t('common.tasks')}</div>
+                      <Tasks
+                        items={tasks}
+                        canEdit={canEdit}
+                        onCreate={onTaskCreate}
+                        onUpdate={onTaskUpdate}
+                        onMove={onTaskMove}
+                        onDelete={onTaskDelete}
+                      />
+                    </div>
+                  </div>
+                )}
+                {attachments.length > 0 && (
+                  <div className={styles.contentModule}>
+                    <div className={styles.moduleWrapper}>
+                      <Icon name="attach" className={styles.moduleIcon} />
+                      <div className={styles.moduleHeader}>{t('common.attachments')}</div>
+                      <Attachments
+                        items={attachments}
+                        canEdit={canEdit}
+                        onUpdate={onAttachmentUpdate}
+                        onDelete={onAttachmentDelete}
+                        onCoverUpdate={handleCoverUpdate}
+                        onGalleryOpen={handleGalleryOpen}
+                        onGalleryClose={handleGalleryClose}
+                      />
+                    </div>
+                  </div>
+                )}
+                <Activities
+                  items={activities}
+                  isFetching={isActivitiesFetching}
+                  isAllFetched={isAllActivitiesFetched}
+                  isDetailsVisible={isActivitiesDetailsVisible}
+                  isDetailsFetching={isActivitiesDetailsFetching}
+                  canEdit={canEditCommentActivities}
+                  canEditAllComments={canEditAllCommentActivities}
+                  onFetch={onActivitiesFetch}
+                  onDetailsToggle={onActivitiesDetailsToggle}
+                  onCommentCreate={onCommentActivityCreate}
+                  onCommentUpdate={onCommentActivityUpdate}
+                  onCommentDelete={onCommentActivityDelete}
+                />
+              </Grid.Column>
+              {canEdit && (
+                <Grid.Column width={4} className={styles.sidebarPadding}>
+                  <div className={styles.actions}>
+                    <span className={styles.actionsTitle}>{t('action.addToCard')}</span>
+                    <BoardMembershipsPopup
+                      items={allBoardMemberships}
+                      currentUserIds={userIds}
+                      onUserSelect={onUserAdd}
+                      onUserDeselect={onUserRemove}
+                    >
+                      <Button fluid className={styles.actionButton}>
+                        <Icon name="user outline" className={styles.actionIcon} />
+                        {t('common.members')}
+                      </Button>
+                    </BoardMembershipsPopup>
+                    <BoardMembershipsPopup
+                      items={allBoardMemberships}
+                      currentUserIds={userIds}
+                      onUserSelect={onUserAdd}
+                      onUserDeselect={onUserRemove}
+                      title="Grupo"
+                    >
+                      <Button fluid className={styles.actionButton}>
+                        <Icon name="user" className={styles.actionIcon} />
+                        {t('Grupo')}
+                      </Button>
+                    </BoardMembershipsPopup>
+                    <LabelsPopup
+                      items={allLabels}
+                      currentIds={labelIds}
+                      onSelect={onLabelAdd}
+                      onDeselect={onLabelRemove}
+                      onCreate={onLabelCreate}
+                      onUpdate={onLabelUpdate}
+                      onMove={onLabelMove}
+                      onDelete={onLabelDelete}
+                    >
+                      <Button fluid className={styles.actionButton}>
+                        <Icon name="bookmark outline" className={styles.actionIcon} />
+                        {t('common.labels')}
+                      </Button>
+                    </LabelsPopup>
+                    <DueDateEditPopup
+                      defaultValue={dueDate}
+                      title="Fecha de Inicio"
+                      onUpdate={handleDueDateUpdate}
+                    >
+                      <Button fluid className={styles.actionButton}>
+                        <Icon name="calendar check" className={styles.actionIcon} />
+                        {t('Fecha de Inicio', {
+                          context: 'title',
+                        })}
+                      </Button>
+                    </DueDateEditPopup>
+                    <DueDateEditPopup defaultValue={dueDate} onUpdate={handleDueDateUpdate}>
+                      <Button fluid className={styles.actionButton}>
+                        <Icon name="calendar check outline" className={styles.actionIcon} />
+                        {t('common.dueDate', {
+                          context: 'title',
+                        })}
+                      </Button>
+                    </DueDateEditPopup>
+                    <TimerEditPopup defaultValue={timer} onUpdate={handleTimerUpdate}>
+                      <Button fluid className={styles.actionButton}>
+                        <Icon name="clock outline" className={styles.actionIcon} />
+                        {t('common.timer')}
+                      </Button>
+                    </TimerEditPopup>
+                    <AttachmentAddPopup onCreate={onAttachmentCreate}>
+                      <Button fluid className={styles.actionButton}>
+                        <Icon name="attach" className={styles.actionIcon} />
+                        {t('common.attachment')}
+                      </Button>
+                    </AttachmentAddPopup>
+                    {surveyBtn && (
+                      <BoardMembershipsPopup
+                        items={allBoardMemberships}
+                        currentUserIds={userIds}
+                        onUserSelect={onUserAdd}
+                        onUserDeselect={onUserRemove}
+                        title="Encuesta"
+                      >
+                        <Button fluid className={styles.actionButton}>
+                          <Icon name="tasks" className={styles.actionIcon} />
+                          {t('Encuesta')}
+                        </Button>
+                      </BoardMembershipsPopup>
+                    )}
+                    <Button
+                      fluid
+                      className={styles.actionButton}
+                      onClick={() => setShowReplay(!showReplay)}
+                    >
+                      <Icon name="reply" className={styles.actionIcon} />
+                      Respuestas
+                    </Button>
+                  </div>
+                  <div className={styles.actions}>
+                    <span className={styles.actionsTitle}>{t('common.actions')}</span>
+                    <Button
+                      fluid
+                      className={styles.actionButton}
+                      onClick={handleToggleSubscriptionClick}
+                    >
+                      <Icon name="paper plane outline" className={styles.actionIcon} />
+                      {isSubscribed ? t('action.unsubscribe') : t('action.subscribe')}
+                    </Button>
+                    <CardMovePopup
+                      projectsToLists={allProjectsToLists}
+                      defaultPath={{
+                        projectId,
+                        boardId,
+                        listId,
+                      }}
+                      onMove={onMove}
+                      onTransfer={onTransfer}
+                      onBoardFetch={onBoardFetch}
+                    >
+                      <Button
+                        fluid
+                        className={styles.actionButton}
+                        onClick={handleToggleSubscriptionClick}
+                      >
+                        <Icon name="share square outline" className={styles.actionIcon} />
+                        {t('action.move')}
+                      </Button>
+                    </CardMovePopup>
+                    <DeletePopup
+                      title="common.deleteCard"
+                      content="common.areYouSureYouWantToDeleteThisCard"
+                      buttonContent="action.deleteCard"
+                      onConfirm={onDelete}
+                    >
+                      <Button fluid className={styles.actionButton}>
+                        <Icon name="trash alternate outline" className={styles.actionIcon} />
+                        {t('action.delete')}
+                      </Button>
+                    </DeletePopup>
+                  </div>
+                </Grid.Column>
+              )}
+            </>
+          ) : (
+            <Grid.Column
+              width={canEdit ? 12 : 16}
+              className={classNames(styles.contentPadding, showReplay ? 'replyList' : '')}
+            >
+              <ReplayStep />
             </Grid.Column>
           )}
         </Grid.Row>
