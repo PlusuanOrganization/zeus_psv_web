@@ -7,7 +7,7 @@ const SERVER_BASE_URL =
   process.env.REACT_APP_SERVER_BASE_URL ||
   (process.env.NODE_ENV === 'production' ? BASE_URL : 'http://localhost:1337');
 
-const SERVER_BASE_URL_CONTROLLER = "https://3a14e702-c882-490d-a233-296f8534ff8b.mock.pstmn.io";
+const SERVER_BASE_URL_CONTROLLER = 'http://localhost:8000';
 
 const SERVER_HOST_NAME = SERVER_BASE_URL.replace(/^(.*\/\/[^/?#]*).*$/, '$1');
 

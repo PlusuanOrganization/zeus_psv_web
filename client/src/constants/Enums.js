@@ -12,4 +12,5 @@ export const ActivityTypes = {
   CREATE_CARD: 'createCard',
   MOVE_CARD: 'moveCard',
   COMMENT_CARD: 'commentCard',
+  SURVEY_START: 'surveyStart',
 };

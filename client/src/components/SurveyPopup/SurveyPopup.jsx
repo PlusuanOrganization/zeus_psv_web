@@ -1,29 +1,40 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Model } from 'survey-core';
 import { Survey } from 'survey-react-ui';
+import { Loader } from 'semantic-ui-react';
 
 import api from '../../api';
 
 import 'survey-core/modern.min.css';
 import './Survey.module.scss';
 
-function SurveyPopup() {
+function SurveyPopup({ surveyId, userId }) {
   const [ survey, setSurvey ] = useState(new Model({}));
   
   if (survey.isEmpty) {
-    api.getSurvey(undefined, {}).then((res) => {
+    api.getSurvey(surveyId, {}).then((res) => {
       setSurvey(new Model(res));
     });
   }
+
+  // useEffect(() => {
+  //   api.getSurvey(surveyId, {}).then((res) => {
+  //     setSurvey(new Model(res));
+  //   });
+  // }, []);
   
   const surveyResults = useCallback((sender) => {
-    const results = JSON.stringify(sender.data);
-    // api.sendSurveyResults(results, userId, surveyId, {});
+    const answer = JSON.stringify(sender.data);
+    api.submitSurvey(surveyId, userId, answer, {});
   }, []);
 
   survey.onComplete.add(surveyResults);
 
-  return <Survey model={survey} />;
+  return survey.isEmpty ? (
+    <Loader active size="massive" />
+  ) : (
+    <Survey model={survey} />
+  );
 }
 
 export default SurveyPopup;

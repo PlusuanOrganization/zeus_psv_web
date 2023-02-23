@@ -132,6 +132,7 @@ export default {
       usernameAlreadyInUse: 'El nombre de usuario ya está en uso',
       users: 'Usuarios',
       writeComment: 'Escribir un comentario...',
+      newSurvey: 'Nueva encuesta disponible <0>aqui</0>',
     },
 
     action: {

@@ -67,6 +67,18 @@ const NotificationsStep = React.memo(({ items, onDelete, onClose }) => {
             </Trans>
           );
         }
+        case ActivityTypes.SURVEY_START: {
+          const surveyLink = Paths.SURVEY.replace(':id', activity.data.surveyId).replace(
+            ':userId',
+            activity.user.id,
+          );
+
+          return (
+            <Trans i18nKey="common.newSurvey">
+              <Link to={surveyLink} onClick={onClose} />
+            </Trans>
+          );
+        }
         default:
       }
 
