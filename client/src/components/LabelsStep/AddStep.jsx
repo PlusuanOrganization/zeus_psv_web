@@ -22,10 +22,11 @@ const AddStep = React.memo(({ defaultData, onCreate, onBack }) => {
   const handleSubmit = useCallback(() => {
     const cleanData = {
       ...data,
-      name: data.name.trim() || null,
+      name: data.name === '' ? (data.name = 'Encuesta') : data.name.trim(),
     };
 
     onCreate(cleanData);
+
     onBack();
   }, [data, onCreate, onBack]);
 
@@ -39,6 +40,7 @@ const AddStep = React.memo(({ defaultData, onCreate, onBack }) => {
       <Popup.Content>
         <Form onSubmit={handleSubmit}>
           <Editor data={data} onFieldChange={handleFieldChange} />
+          <Button positive content="Encuesta" className={styles.submitButton} />
           <Button positive content={t('action.createLabel')} className={styles.submitButton} />
         </Form>
       </Popup.Content>

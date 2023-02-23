@@ -765,6 +765,15 @@ a {
   text-decoration: none;
 }
 
+a.anchorSurvey {
+  width: 100%;
+  display: block;
+}
+
+a.anchorSurvey i.fitted.icon {
+  margin-right: 8px !important;
+}
+
 a:hover {
   color: #1e70bf;
   text-decoration: none;
