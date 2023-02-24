@@ -31,6 +31,7 @@ import ReplayStep from './ReplayStep';
 import cards from '../../api/cards'; */
 
 import styles from './CardModal.module.scss';
+import api from '../../api';
 
 const CardModal = React.memo(
   ({
@@ -131,6 +132,42 @@ const CardModal = React.memo(
       },
       [onUpdate],
     );
+
+    const handleStartDateUpdate = useCallback(
+      async (newStartDate) => {
+        if (newStartDate !== null) {
+          await api.updateCardApi(id, {
+            startDate: newStartDate.toISOString(),
+          }, {});
+
+          setStartDate(newStartDate);
+        }
+      },
+      [],
+    );
+
+    const [ surveyStatus, setSurveyStatus ] = useState(false);
+    const [ totalAnswers, setTotalAnswers ] = useState(0);
+    const [ totalNotifications, setTotalNotifications ] = useState(0);
+    const [ startDate, setStartDate ] = useState(null);
+
+    useEffect(() => { 
+      api.getCardApi(id, {})
+        .then((response) => {
+          if (response.start_date) {
+            setStartDate(new Date(response.start_date));
+
+            if (response.survey_status) {
+              setSurveyStatus(response.survey_status);
+
+              if (response.survey_status === 'STARTED') {
+                setTotalAnswers(response.total_answers);
+                setTotalNotifications(response.total_notifications);
+              }
+            }
+          }
+        });
+    }, []);
 
     const handleTimerUpdate = useCallback(
       (newTimer) => {
@@ -457,18 +494,14 @@ const CardModal = React.memo(
                         {t('common.members')}
                       </Button>
                     </BoardMembershipsPopup>
-                    <BoardMembershipsPopup
-                      items={allBoardMemberships}
-                      currentUserIds={userIds}
-                      onUserSelect={onUserAdd}
-                      onUserDeselect={onUserRemove}
-                      title="Grupo"
-                    >
-                      <Button fluid className={styles.actionButton}>
-                        <Icon name="user" className={styles.actionIcon} />
-                        {t('Grupo')}
-                      </Button>
-                    </BoardMembershipsPopup>
+                    { isSurvey && (
+                      <BoardGroupsPopup title="Grupo" cardId={id}>
+                        <Button fluid className={styles.actionButton}>
+                          <Icon name="user" className={styles.actionIcon} />
+                          {t('Grupo')}
+                        </Button>
+                      </BoardGroupsPopup>
+                    )}
                     <LabelsPopup
                       items={allLabels}
                       currentIds={labelIds}
@@ -484,18 +517,20 @@ const CardModal = React.memo(
                         {t('common.labels')}
                       </Button>
                     </LabelsPopup>
-                    <DueDateEditPopup
-                      defaultValue={dueDate}
-                      title="Fecha de Inicio"
-                      onUpdate={handleDueDateUpdate}
-                    >
-                      <Button fluid className={styles.actionButton}>
-                        <Icon name="calendar check" className={styles.actionIcon} />
-                        {t('Fecha de Inicio', {
-                          context: 'title',
-                        })}
-                      </Button>
-                    </DueDateEditPopup>
+                    { isSurvey && (
+                      <DueDateEditPopup
+                        defaultValue={startDate}
+                        title="Fecha de Inicio"
+                        onUpdate={handleStartDateUpdate}
+                      >
+                        <Button fluid className={styles.actionButton}>
+                          <Icon name="calendar check" className={styles.actionIcon} />
+                          {t('Fecha de Inicio', {
+                            context: 'title',
+                          })}
+                        </Button>
+                      </DueDateEditPopup>
+                    )}
                     <DueDateEditPopup defaultValue={dueDate} onUpdate={handleDueDateUpdate}>
                       <Button fluid className={styles.actionButton}>
                         <Icon name="calendar check outline" className={styles.actionIcon} />
@@ -516,28 +551,31 @@ const CardModal = React.memo(
                         {t('common.attachment')}
                       </Button>
                     </AttachmentAddPopup>
-                    {surveyBtn && (
-                      <BoardMembershipsPopup
-                        items={allBoardMemberships}
-                        currentUserIds={userIds}
-                        onUserSelect={onUserAdd}
-                        onUserDeselect={onUserRemove}
-                        title="Encuesta"
-                      >
+                    { isSurvey && (
+                      <BoardSurveysPopup title="Encuesta" cardId={id}>
                         <Button fluid className={styles.actionButton}>
                           <Icon name="tasks" className={styles.actionIcon} />
                           {t('Encuesta')}
                         </Button>
-                      </BoardMembershipsPopup>
+                      </BoardSurveysPopup>
                     )}
-                    <Button
-                      fluid
-                      className={styles.actionButton}
-                      onClick={() => setShowReplay(!showReplay)}
-                    >
-                      <Icon name="reply" className={styles.actionIcon} />
-                      Respuestas
-                    </Button>
+                    { isSurvey && (
+                      <Button
+                        fluid
+                        className={styles.actionButton}
+                        onClick={() => setShowReplay(!showReplay)}
+                      >
+                        <Icon name="reply" className={styles.actionIcon} />
+                        {t('Respuestas ')}
+                        {
+                          surveyStatus === 'STARTED' ? (
+                            <span className={styles.surveyStatus}>
+                              {totalAnswers}/{totalNotifications}
+                            </span>
+                          ) : ''
+                        }
+                      </Button>
+                    )}
                   </div>
                   <div className={styles.actions}>
                     <span className={styles.actionsTitle}>{t('common.actions')}</span>
@@ -589,7 +627,7 @@ const CardModal = React.memo(
               width={canEdit ? 12 : 16}
               className={classNames(styles.contentPadding, showReplay ? 'replyList' : '')}
             >
-              <ReplayStep />
+              <ReplayStep cardId={id} />
             </Grid.Column>
           )}
         </Grid.Row>

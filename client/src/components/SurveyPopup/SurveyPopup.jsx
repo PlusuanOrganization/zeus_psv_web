@@ -8,7 +8,7 @@ import api from '../../api';
 import 'survey-core/modern.min.css';
 import './Survey.module.scss';
 
-function SurveyPopup({ surveyId, userId }) {
+function SurveyPopup({ surveyId, userId, cardId }) {
   const [ survey, setSurvey ] = useState(new Model({}));
   
   if (survey.isEmpty) {
@@ -25,7 +25,7 @@ function SurveyPopup({ surveyId, userId }) {
   
   const surveyResults = useCallback((sender) => {
     const answer = JSON.stringify(sender.data);
-    api.submitSurvey(surveyId, userId, answer, {});
+    api.submitSurvey(surveyId, cardId, userId, answer, {});
   }, []);
 
   survey.onComplete.add(surveyResults);

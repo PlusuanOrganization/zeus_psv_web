@@ -52,10 +52,17 @@ const makeHandleNotificationCreate = (next) => (body) => {
 
 const makeHandleNotificationUpdate = makeHandleNotificationCreate;
 
+import http from './http-controller';
+
+/* Actions */
+
+const getNotificationsApi = (cardId, headers) => http.get(`/cards/${cardId}/notifications`, headers);
+
 export default {
   getNotifications,
   getNotification,
   updateNotifications,
   makeHandleNotificationCreate,
   makeHandleNotificationUpdate,
+  getNotificationsApi
 };

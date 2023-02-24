@@ -72,6 +72,7 @@ export const selectPath = createReduxOrmSelector(
           return {
             surveyId: pathsMatch.params.id,
             userId: pathsMatch.params.userId,
+            cardId: pathsMatch.params.cardId,
           };
         }
         default:

@@ -5,7 +5,7 @@ const LOGIN = `${Config.BASE_PATH}/login`;
 const PROJECTS = `${Config.BASE_PATH}/projects/:id`;
 const BOARDS = `${Config.BASE_PATH}/boards/:id`;
 const CARDS = `${Config.BASE_PATH}/cards/:id`;
-const SURVEY = `${Config.BASE_PATH}/survey/:id/:userId`;
+const SURVEY = `${Config.BASE_PATH}/survey/:id/:cardId/:userId`;
 
 export default {
   ROOT,

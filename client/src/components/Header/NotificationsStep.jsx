@@ -12,7 +12,7 @@ import User from '../User';
 
 import styles from './NotificationsStep.module.scss';
 
-const NotificationsStep = React.memo(({ items, onDelete, onClose }) => {
+const NotificationsStep = React.memo(({ items, onDelete, onClose, user }) => {
   const [t] = useTranslation();
 
   const handleDelete = useCallback(
@@ -70,8 +70,8 @@ const NotificationsStep = React.memo(({ items, onDelete, onClose }) => {
         case ActivityTypes.SURVEY_START: {
           const surveyLink = Paths.SURVEY.replace(':id', activity.data.surveyId).replace(
             ':userId',
-            activity.user.id,
-          );
+            user.id,
+          ).replace(':cardId', card.id);
 
           return (
             <Trans i18nKey="common.newSurvey">

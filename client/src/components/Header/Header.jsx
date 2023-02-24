@@ -77,7 +77,7 @@ const Header = React.memo(
                 <Icon fitted name="users" />
               </Menu.Item>
             )}
-            <NotificationsPopup items={notifications} onDelete={onNotificationDelete}>
+            <NotificationsPopup items={notifications} onDelete={onNotificationDelete} user={user} >
               <Menu.Item className={classNames(styles.item, styles.itemHoverable)}>
                 <Icon fitted name="bell" />
                 {notifications.length > 0 && (

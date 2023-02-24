@@ -76,6 +76,14 @@ const makeHandleCardUpdate = makeHandleCardCreate;
 
 const makeHandleCardDelete = makeHandleCardCreate;
 
+import http from './http-controller';
+
+/* Actions */
+
+const updateCardApi = (cardId, data, headers) => http.post(`/cards/${cardId}`, data, headers);
+
+const getCardApi = (cardId, headers) => http.get(`/cards/${cardId}`, {}, headers);
+
 export default {
   createCard,
   getCard,
@@ -84,4 +92,6 @@ export default {
   makeHandleCardCreate,
   makeHandleCardUpdate,
   makeHandleCardDelete,
+  updateCardApi,
+  getCardApi,
 };
