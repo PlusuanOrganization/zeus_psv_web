@@ -17,6 +17,7 @@ import activities from './activities';
 import commentActivities from './comment-activities';
 import notifications from './notifications';
 import survey from './survey';
+import groups from './groups';
 
 export { http, socket };
 
@@ -38,4 +39,5 @@ export default {
   ...commentActivities,
   ...notifications,
   ...survey,
+  ...groups,
 };

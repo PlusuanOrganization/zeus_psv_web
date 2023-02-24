@@ -29,6 +29,7 @@ const mapStateToProps = (state) => {
     isActivitiesDetailsFetching,
     boardId,
     listId,
+    id,
   } = selectors.selectCurrentCard(state);
 
   const users = selectors.selectUsersForCurrentCard(state);
@@ -46,6 +47,7 @@ const mapStateToProps = (state) => {
   }
 
   return {
+    id,
     name,
     description,
     dueDate,

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -20,6 +20,8 @@ import Label from '../Label';
 import DueDate from '../DueDate';
 import Timer from '../Timer';
 import BoardMembershipsStep from '../BoardMembershipsStep';
+import BoardGroupsStep from '../BoardGroupsStep';
+import BoardSurveysStep from '../BoardSurveysStep/BoardSurveysStep';
 import LabelsStep from '../LabelsStep';
 import DueDateEditStep from '../DueDateEditStep';
 import TimerEditStep from '../TimerEditStep';
@@ -32,6 +34,7 @@ import styles from './CardModal.module.scss';
 
 const CardModal = React.memo(
   ({
+    id,
     name,
     description,
     dueDate,
@@ -83,11 +86,17 @@ const CardModal = React.memo(
     onClose,
   }) => {
     const [t] = useTranslation();
-
-    const [surveyBtn] = useState(true);
-
+    
     const isGalleryOpened = useRef(false);
+    
+    let isSurvey = false;
 
+    labels.forEach((label) => {
+      if (label.name === 'Encuesta') {
+        isSurvey = true;
+      }
+    })
+    
     const handleToggleTimerClick = useCallback(() => {
       onUpdate({
         timer: timer.startedAt ? stopTimer(timer) : startTimer(timer),
@@ -161,18 +170,10 @@ const CardModal = React.memo(
       onClose();
     }, [onClose]);
 
-    /* const showSurveyBtn = useCallback(() => {
-      setSurveyBtn(!surveyBtn);
-    }, [surveyBtn]);
-
-    const checkIfSurvey = labels.forEach((label) => {
-      if (label.name === 'Encuesta') {
-        showSurveyBtn;
-      }
-    }); */
-
     const AttachmentAddPopup = usePopup(AttachmentAddStep);
     const BoardMembershipsPopup = usePopup(BoardMembershipsStep);
+    const BoardGroupsPopup = usePopup(BoardGroupsStep);
+    const BoardSurveysPopup = usePopup(BoardSurveysStep);
     const LabelsPopup = usePopup(LabelsStep);
     const DueDateEditPopup = usePopup(DueDateEditStep);
     const TimerEditPopup = usePopup(TimerEditStep);
@@ -439,18 +440,14 @@ const CardModal = React.memo(
                     {t('common.members')}
                   </Button>
                 </BoardMembershipsPopup>
-                <BoardMembershipsPopup
-                  items={allBoardMemberships}
-                  currentUserIds={userIds}
-                  onUserSelect={onUserAdd}
-                  onUserDeselect={onUserRemove}
-                  title="Grupo"
-                >
-                  <Button fluid className={styles.actionButton}>
-                    <Icon name="user" className={styles.actionIcon} />
-                    {t('Grupo')}
-                  </Button>
-                </BoardMembershipsPopup>
+                { isSurvey && (
+                  <BoardGroupsPopup title="Grupo" cardId={id} >
+                    <Button fluid className={styles.actionButton}>
+                      <Icon name="user" className={styles.actionIcon} />
+                      {t('Grupo')}
+                    </Button>
+                  </BoardGroupsPopup>
+                )}
                 <LabelsPopup
                   items={allLabels}
                   currentIds={labelIds}
@@ -466,18 +463,16 @@ const CardModal = React.memo(
                     {t('common.labels')}
                   </Button>
                 </LabelsPopup>
-                <DueDateEditPopup
-                  defaultValue={dueDate}
-                  title="Fecha de Inicio"
-                  onUpdate={handleDueDateUpdate}
-                >
-                  <Button fluid className={styles.actionButton}>
-                    <Icon name="calendar check" className={styles.actionIcon} />
-                    {t('Fecha de Inicio', {
-                      context: 'title',
-                    })}
-                  </Button>
-                </DueDateEditPopup>
+                { isSurvey && (
+                  <DueDateEditPopup defaultValue={dueDate} title="Fecha de Inicio" onUpdate={handleDueDateUpdate} >
+                    <Button fluid className={styles.actionButton}>
+                      <Icon name="calendar check" className={styles.actionIcon} />
+                      {t('Fecha de Inicio', {
+                        context: 'title',
+                      })}
+                    </Button>
+                  </DueDateEditPopup>
+                )}
                 <DueDateEditPopup defaultValue={dueDate} onUpdate={handleDueDateUpdate}>
                   <Button fluid className={styles.actionButton}>
                     <Icon name="calendar check outline" className={styles.actionIcon} />
@@ -498,19 +493,13 @@ const CardModal = React.memo(
                     {t('common.attachment')}
                   </Button>
                 </AttachmentAddPopup>
-                {surveyBtn && (
-                  <BoardMembershipsPopup
-                    items={allBoardMemberships}
-                    currentUserIds={userIds}
-                    onUserSelect={onUserAdd}
-                    onUserDeselect={onUserRemove}
-                    title="Encuesta"
-                  >
+                { isSurvey && (
+                  <BoardSurveysPopup title="Encuesta" cardId={id} >
                     <Button fluid className={styles.actionButton}>
                       <Icon name="tasks" className={styles.actionIcon} />
                       {t('Encuesta')}
                     </Button>
-                  </BoardMembershipsPopup>
+                  </BoardSurveysPopup>
                 )}
               </div>
               <div className={styles.actions}>
@@ -574,6 +563,7 @@ const CardModal = React.memo(
 );
 
 CardModal.propTypes = {
+  id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   description: PropTypes.string,
   dueDate: PropTypes.instanceOf(Date),
