@@ -40869,3 +40869,15 @@ div.sv-root-modern {
   width: 100%;
   height: 89%;
 }
+
+span.reply {
+  color: #fff;
+  background: linear-gradient(90deg, rgba(40,167,69,1) 62%, rgba(31,124,52,1) 100%);;
+  border: linear-gradient(90deg, rgba(40,167,69,1) 62%, rgba(31,124,52,1) 100%);;
+}
+
+span.notify {
+  color: #3d3e3f;
+  background: linear-gradient(90deg, rgba(254,212,48,1) 62%, rgba(252,176,69,1) 100%);
+  border: linear-gradient(90deg, rgba(254,212,48,1) 62%, rgba(252,176,69,1) 100%);
+}
